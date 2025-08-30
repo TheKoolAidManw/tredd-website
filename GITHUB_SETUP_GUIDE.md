@@ -36,7 +36,7 @@ git add .
 git commit -m "Initial commit: TREDD website with modern design and carousel"
 
 # Add GitHub remote (replace YOUR_USERNAME with your actual GitHub username)
-git remote add origin https://github.com/YOUR_USERNAME/tredd-website.git
+git remote add origin https://github.com/TheKoolAidManw/tredd-website
 
 # Set main branch
 git branch -M main
