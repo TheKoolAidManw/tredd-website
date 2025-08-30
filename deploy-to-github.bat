@@ -17,7 +17,7 @@ git commit -m "Initial commit: TREDD website with modern design and carousel"
 
 echo.
 echo Step 4: Adding GitHub remote (replace YOUR_USERNAME with your GitHub username)...
-echo git remote add origin https://github.com/YOUR_USERNAME/tredd-website.git
+echo git remote add origin https://github.com/TheKoolAidManw/TREDDWebsite
 
 echo.
 echo Step 5: Pushing to GitHub...
