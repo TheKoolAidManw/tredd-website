@@ -39,35 +39,224 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Contact form handling
+// Contact form handling with FormSubmit
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
+    // Add FormSubmit configuration
+    contactForm.setAttribute('action', 'https://formsubmit.co/contact@treddatdsoa.org');
+    contactForm.setAttribute('method', 'POST');
+    
+    // Add hidden fields for FormSubmit configuration
+    const hiddenFields = [
+        { name: '_subject', value: 'New Contact Form Submission from TREDD Website' },
+        { name: '_template', value: 'table' },
+        { name: '_captcha', value: 'false' },
+        { name: '_next', value: window.location.href + '?success=true' }
+    ];
+    
+    hiddenFields.forEach(field => {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = field.name;
+        hiddenInput.value = field.value;
+        contactForm.appendChild(hiddenInput);
+    });
+    
     contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
         // Get form data
         const formData = new FormData(this);
         const name = formData.get('name');
         const email = formData.get('email');
         const message = formData.get('message');
         
-        // Simple validation
-        if (!name || !email || !message) {
-            alert('Please fill in all fields');
-            return;
+        // Enhanced validation with visual feedback
+        let isValid = true;
+        
+        // Name validation
+        if (!name.trim()) {
+            document.getElementById('name').classList.add('error');
+            showNotification('Please enter your name', 'error');
+            isValid = false;
+        } else {
+            document.getElementById('name').classList.add('success');
         }
         
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert('Please enter a valid email address');
+        if (!email.trim() || !emailRegex.test(email)) {
+            document.getElementById('email').classList.add('error');
+            showNotification('Please enter a valid email address', 'error');
+            isValid = false;
+        } else {
+            document.getElementById('email').classList.add('success');
+        }
+        
+        // Message validation
+        if (!message.trim()) {
+            document.getElementById('message').classList.add('error');
+            showNotification('Please enter your message', 'error');
+            isValid = false;
+        } else if (message.trim().length < 10) {
+            document.getElementById('message').classList.add('error');
+            showNotification('Message must be at least 10 characters long', 'error');
+            isValid = false;
+        } else {
+            document.getElementById('message').classList.add('success');
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
             return;
         }
         
-        // Simulate form submission (replace with actual form handling)
-        alert('Thank you for your message! We\'ll get back to you soon.');
-        this.reset();
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = 'Sending...';
+        submitButton.disabled = true;
+        submitButton.classList.add('loading');
+        
+        // Clear any previous validation states
+        this.querySelectorAll('input, textarea').forEach(field => {
+            field.classList.remove('error', 'success');
+        });
+        
+        // Show success notification
+        showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
+        
+        // Reset button state after a short delay
+        setTimeout(() => {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading');
+        }, 2000);
     });
+    
+    // Add real-time validation
+    const formFields = contactForm.querySelectorAll('input, textarea');
+    formFields.forEach(field => {
+        field.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        field.addEventListener('input', function() {
+            // Remove error state when user starts typing
+            if (this.classList.contains('error')) {
+                this.classList.remove('error');
+            }
+        });
+    });
+}
+
+// Real-time field validation
+function validateField(field) {
+    const value = field.value.trim();
+    const fieldType = field.type;
+    const fieldName = field.name;
+    
+    // Remove previous validation states
+    field.classList.remove('error', 'success');
+    
+    // Validate based on field type
+    if (fieldType === 'email') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (value && emailRegex.test(value)) {
+            field.classList.add('success');
+        } else if (value) {
+            field.classList.add('error');
+        }
+    } else if (fieldName === 'name') {
+        if (value && value.length >= 2) {
+            field.classList.add('success');
+        } else if (value) {
+            field.classList.add('error');
+        }
+    } else if (fieldName === 'message') {
+        if (value && value.length >= 10) {
+            field.classList.add('success');
+        } else if (value) {
+            field.classList.add('error');
+        }
+    }
+}
+
+// Notification system
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-message">${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 10000;
+        max-width: 400px;
+        animation: slideInRight 0.3s ease;
+    `;
+    
+    // Add animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .notification-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .notification-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .notification-close:hover {
+            opacity: 1;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
 }
 
 // Animate elements on scroll
@@ -112,6 +301,14 @@ function preloadImages() {
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     preloadImages();
+    
+    // Check for success parameter in URL (FormSubmit redirect)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+        showNotification('Thank you for your message! We\'ll get back to you soon.', 'success');
+        // Remove the success parameter from URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
     
     // Add some interactive effects
     const buttons = document.querySelectorAll('.btn');
