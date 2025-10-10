@@ -97,26 +97,11 @@ The website is fully responsive and includes:
 - **Address**: 501 S Sapodilla Ave, West Palm Beach
 - **Instagram**: [@tredd_at_dsoa](https://www.instagram.com/tredd_at_dsoa/?hl=en)
 
-## 🤝 Contributing
-
-This is a student project for TREDD. If you're a team member:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
 
 ## 📄 License
 
 This project is created for TREDD, a student-run non-profit organization.
 
-## 🙏 Acknowledgments
-
-- **TREDD Team**: For the mission and vision
-- **Font Awesome**: For the icons
-- **Google Fonts**: For the Inter font family
-- **Student Volunteers**: For making this project possible
-
----
 
 **TREDD** - Technology Recycling and Eliminating the Digital Divide
 *Empowering communities through technology access*
