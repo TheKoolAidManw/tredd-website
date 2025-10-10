@@ -276,7 +276,7 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe elements for animation
 document.addEventListener('DOMContentLoaded', () => {
-    const animateElements = document.querySelectorAll('.mission-card, .stat-item, .contact-item');
+    const animateElements = document.querySelectorAll('.mission-card, .stat-item, .contact-item, .president-card');
     
     animateElements.forEach(el => {
         el.style.opacity = '0';
@@ -286,9 +286,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Add loading animation for images (excluding carousel images)
+// Add loading animation for images (excluding carousel and president images)
 function preloadImages() {
-    const images = document.querySelectorAll('img:not(.carousel-img)');
+    const images = document.querySelectorAll('img:not(.carousel-img):not(.president-img)');
     images.forEach(img => {
         img.addEventListener('load', () => {
             img.style.opacity = '1';
