@@ -1,290 +1,632 @@
-z<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TREDD - Technology Recycling and Eliminating the Digital Divide</title>
-    
-    <!-- Cache-busting meta tags -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    
-    <link rel="stylesheet" href="styles.css?v=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TREDD — Technology Recycling & Eliminating the Digital Divide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:     #1D9E75;
+      --green-mid: #0F6E56;
+      --green-dk:  #085041;
+      --bg:        #000;
+      --surface:   #111;
+      --surface2:  #161616;
+      --text:      #f5f5f7;
+      --text-2:    rgba(245,245,247,.65);
+      --text-3:    rgba(245,245,247,.4);
+      --border:    rgba(255,255,255,.1);
+      --border-2:  rgba(255,255,255,.07);
+      --ff:        'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--ff);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: .5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 52px;
+    }
+    .nav-logo {
+      font-size: 17px; font-weight: 600; letter-spacing: -.02em;
+      color: var(--text); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 12px; color: var(--text-2);
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--green); color: #fff;
+      padding: 7px 18px; border-radius: 980px;
+      font-size: 12px; font-weight: 500;
+      text-decoration: none; transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--green-mid); }
+
+    /* HERO */
+    #home {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 48px 80px;
+      border-bottom: .5px solid var(--border);
+      position: relative;
+    }
+    .hero-glow {
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 60%, rgba(29,158,117,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 660px; }
+    .eyebrow {
+      font-size: 12px; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(44px, 7vw, 72px);
+      font-weight: 600; letter-spacing: -.04em;
+      line-height: 1.04; color: var(--text);
+      margin-bottom: 22px;
+    }
+    h1 span { color: var(--green); }
+    .hero-sub {
+      font-size: 19px; font-weight: 300; color: var(--text-2);
+      max-width: 460px; margin: 0 auto 40px; line-height: 1.55;
+    }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-fill {
+      background: var(--green); color: #fff;
+      padding: 13px 28px; border-radius: 980px;
+      font-size: 15px; font-weight: 500;
+      text-decoration: none; transition: background .2s, transform .15s;
+      display: inline-block;
+    }
+    .btn-fill:hover { background: var(--green-mid); transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent; color: var(--green);
+      padding: 13px 28px; border-radius: 980px;
+      font-size: 15px; font-weight: 500;
+      text-decoration: none;
+      border: 1px solid rgba(29,158,117,.4);
+      transition: border-color .2s, background .2s, transform .15s;
+      display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--green); background: rgba(29,158,117,.07); transform: translateY(-1px); }
+
+    /* STAT BAR */
+    .stat-bar {
+      display: flex; border-top: .5px solid var(--border);
+      border-bottom: .5px solid var(--border);
+      background: var(--bg);
+    }
+    .stat-item {
+      flex: 1; text-align: center; padding: 32px 16px;
+      border-right: .5px solid var(--border-2);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-n {
+      font-size: 42px; font-weight: 600; letter-spacing: -.04em;
+      color: var(--text); line-height: 1;
+    }
+    .stat-l {
+      font-size: 11px; color: var(--text-3);
+      letter-spacing: .06em; text-transform: uppercase; margin-top: 6px;
+    }
+
+    /* SECTION BASE */
+    section { padding: 96px 48px; border-bottom: .5px solid var(--border); }
+    .sec-label {
+      font-size: 11px; font-weight: 500; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--green);
+      text-align: center; margin-bottom: 14px;
+    }
+    h2 {
+      font-size: clamp(32px, 4vw, 48px); font-weight: 600;
+      letter-spacing: -.035em; line-height: 1.08;
+      color: var(--text); text-align: center; margin-bottom: 14px;
+    }
+    .sec-sub {
+      font-size: 17px; font-weight: 300; color: var(--text-2);
+      text-align: center; max-width: 420px; margin: 0 auto 56px; line-height: 1.6;
+    }
+
+    /* MISSION — photos */
+    .mission-photos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 56px;
+      border-radius: 20px; overflow: hidden;
+    }
+    .mission-photos img {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block;
+    }
+    .mission-photos img:first-child {
+      grid-column: 1 / -1; aspect-ratio: 16/7;
+    }
+
+    /* PILLARS */
+    .pillars-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border-2);
+      border-radius: 20px; overflow: hidden;
+    }
+    .pillar {
+      background: var(--surface); padding: 36px 28px;
+    }
+    .pillar-icon { font-size: 30px; margin-bottom: 18px; }
+    .pillar-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 10px; letter-spacing: -.01em; }
+    .pillar-body { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+    /* TEAM */
+    #team { background: var(--bg); }
+    .team-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; max-width: 720px; margin: 0 auto;
+    }
+    .team-card {
+      background: var(--surface); border-radius: 20px; overflow: hidden;
+      border: .5px solid var(--border); transition: border-color .25s;
+    }
+    .team-card:hover { border-color: rgba(255,255,255,.22); }
+    .team-card img {
+      width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+      background: #1a2e28;
+    }
+    .team-card-body { padding: 22px 22px 26px; }
+    .tc-name { font-size: 18px; font-weight: 600; color: var(--text); letter-spacing: -.02em; }
+    .tc-role {
+      font-size: 11px; color: var(--green); font-weight: 500;
+      letter-spacing: .07em; text-transform: uppercase; margin: 5px 0 12px;
+    }
+    .tc-bio { font-size: 13px; color: var(--text-2); line-height: 1.65; }
+
+    /* JOIN STRIP */
+    .join-strip {
+      margin-top: 48px;
+      background: var(--surface2); border-radius: 20px;
+      border: .5px solid var(--border);
+      padding: 44px 48px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    }
+    .join-strip h3 {
+      font-size: 26px; font-weight: 600; letter-spacing: -.02em; color: var(--text);
+    }
+    .join-strip p { font-size: 15px; color: var(--text-2); margin-top: 6px; max-width: 380px; }
+
+    /* DONATE CTA */
+    #donate { background: var(--bg); text-align: center; }
+    #donate h2 { margin-bottom: 14px; }
+
+    /* CONTACT */
+    #contact { background: var(--surface2); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 16px; }
+    .contact-info { display: flex; flex-direction: column; gap: 28px; }
+    .info-item { display: flex; gap: 16px; align-items: flex-start; }
+    .info-icon-wrap {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: rgba(29,158,117,.12); color: var(--green);
+      display: grid; place-items: center; flex-shrink: 0; font-size: 18px;
+    }
+    .info-lbl { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); }
+    .info-val { font-size: 15px; color: var(--text); margin-top: 3px; }
+    .info-val a { color: var(--green); text-decoration: none; }
+    .info-val a:hover { text-decoration: underline; }
+
+    /* FORM */
+    .contact-form { display: flex; flex-direction: column; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+    .form-group input,
+    .form-group textarea {
+      background: rgba(255,255,255,.05);
+      border: .5px solid rgba(255,255,255,.12);
+      border-radius: 10px; padding: 12px 14px;
+      font-family: var(--ff); font-size: 15px; color: var(--text);
+      outline: none; transition: border-color .2s, background .2s;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--text-3); }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--green); background: rgba(29,158,117,.05);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-submit {
+      background: var(--green); color: #fff;
+      padding: 13px 28px; border-radius: 980px;
+      font-size: 15px; font-weight: 500; font-family: var(--ff);
+      border: none; cursor: pointer;
+      align-self: flex-start; transition: background .2s, transform .15s;
+    }
+    .form-submit:hover { background: var(--green-mid); transform: translateY(-1px); }
+    .form-status {
+      font-size: 14px; padding: 12px 16px; border-radius: 10px; margin-bottom: 14px;
+    }
+    .form-status.success {
+      color: var(--green); background: rgba(29,158,117,.12);
+      border: .5px solid rgba(29,158,117,.35);
+    }
+    .form-status.error {
+      color: #ff6b6b; background: rgba(255,107,107,.1);
+      border: .5px solid rgba(255,107,107,.3);
+    }
+
+    /* FOOTER */
+    footer {
+      background: #000; border-top: .5px solid var(--border);
+      padding: 28px 48px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    }
+    .footer-brand { font-size: 14px; font-weight: 600; color: var(--text); }
+    .footer-brand span { display: block; font-size: 11px; font-weight: 300; color: var(--text-3); margin-top: 2px; }
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+    .footer-links a { font-size: 12px; color: var(--text-3); text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--green); }
+    footer .copy { font-size: 11px; color: var(--text-3); }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      nav { padding: 0 24px; }
+      section { padding: 72px 24px; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .join-strip { flex-direction: column; align-items: flex-start; padding: 32px 28px; }
+      footer { padding: 24px; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      h1 { font-size: 38px; }
+      .stat-bar { flex-wrap: wrap; }
+      .stat-item { min-width: 50%; }
+      .team-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .mission-photos { grid-template-columns: 1fr; }
+      .mission-photos img:first-child { aspect-ratio: 16/9; }
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <h2>TREDD</h2>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#home" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#mission" class="nav-link">Our Mission</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#team" class="nav-link">Team</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#contact" class="nav-link">Contact Us</a>
-                </li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title">TREDD</h1>
-                <p class="hero-subtitle">Technology Recycling and Eliminating the Digital Divide</p>
-                <p class="hero-description">
-                    A student-run non-profit organization dedicated to eliminating the digital divide by refurbishing unused and unwanted computers, distributing them to children from under-resourced communities.
-                </p>
-                <div class="hero-buttons">
-                    <a href="#mission" class="btn btn-primary">Learn More</a>
-                    <a href="#contact" class="btn btn-secondary">Get Involved</a>
-                </div>
-            </div>
-            
-            </div>
-        </div>
-    </section>
+  <!-- NAV -->
+  <nav>
+    <a href="#home" class="nav-logo">TREDD</a>
+    <ul class="nav-links">
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#donate">Donate</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Get involved</a>
+  </nav>
 
-    <!-- Mission Section -->
-    <section id="mission" class="mission">
-        <div class="container">
-            <div class="section-header">
-                <h2>Our Mission</h2>
-                <p>Bridging the digital gap through technology recycling</p>
-            </div>
-            
-            <!-- Image Carousel -->
-            <div class="mission-carousel">
-                <div class="carousel-container">
-                    <div class="carousel-slide active">
-                        <div class="carousel-image">
-                            <img src="Images/IMG_0034.jpeg" alt="TREDD Presentation" class="carousel-img">
-                        </div>
-                    </div>
-                    <div class="carousel-slide">
-                        <div class="carousel-image">
-                            <img src="Images/karinaa presenting.jpeg" alt="Karina Presenting" class="carousel-img">
-                        </div>
-                    </div>
-                    <div class="carousel-slide">
-                        <div class="carousel-image">
-                            <img src="Images/Karinas presentaionnn.jpeg" alt="Karina's Presentation" class="carousel-img">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Carousel Navigation -->
-                <button class="carousel-btn prev" onclick="changeSlide(-1)">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="carousel-btn next" onclick="changeSlide(1)">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-                
-                <!-- Carousel Indicators -->
-                <div class="carousel-indicators">
-                    <span class="indicator active" onclick="currentSlide(1)"></span>
-                    <span class="indicator" onclick="currentSlide(2)"></span>
-                    <span class="indicator" onclick="currentSlide(3)"></span>
-                </div>
-            </div>
-            
-            <div class="mission-grid">
-                <div class="mission-card">
-                    <div class="card-icon">
-                        <i class="fas fa-recycle"></i>
-                    </div>
-                    <h3>Technology Recycling</h3>
-                    <p>We collect and refurbish unused computers, giving them new life and purpose.</p>
-                </div>
-                <div class="mission-card">
-                    <div class="card-icon">
-                        <i class="fas fa-laptop"></i>
-                    </div>
-                    <h3>Digital Access</h3>
-                    <p>Providing essential technology to children who need it most for education and growth.</p>
-                </div>
-                <div class="mission-card">
-                    <div class="card-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Community Impact</h3>
-                    <p>Building stronger communities by ensuring every child has access to digital tools.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- HERO -->
+  <section id="home">
+    <div class="hero-glow"></div>
+    <div class="hero-inner">
+      <div class="eyebrow">Student-run · West Palm Beach</div>
+      <h1>Close the gap.<br><span>One computer</span><br>at a time.</h1>
+      <p class="hero-sub">Refurbishing unused technology and placing it in the hands of children who need it most.</p>
+      <div class="hero-btns">
+        <a href="#donate" class="btn-fill">Donate a computer</a>
+        <a href="#mission" class="btn-ghost">Learn more</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Team Section -->
-    <section id="team" class="team">
-        <div class="container">
-            <div class="section-header">
-                <h2>Our Team</h2>
-                <p>Passionate students making a difference</p>
-            </div>
-            <div class="team-content">
-                <div class="team-text">
-                    <h3>Student-Led Initiative</h3>
-                    <p>TREDD is powered by dedicated students who believe in the power of technology to transform lives. Our team works tirelessly to collect, refurbish, and distribute computers to those in need.</p>
-                    <p>We're always looking for new members who share our passion for technology and community service. Join us in making a difference!</p>
-                </div>
-                <div class="team-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">30+</div>
-                        <div class="stat-label">Computers Donated</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">8+</div>
-                        <div class="stat-label">Team Members</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Club Presidents Section -->
-            <div class="presidents-section">
-                <div class="section-header">
-                    <h3>Meet Our Club Presidents</h3>
-                    <p>The leadership team driving our mission forward</p>
-                </div>
-                <div class="presidents-grid">
-                    <div class="president-card">
-                        <div class="president-image">
-                            <img src="headshots/anthony.jpg" alt="Anthony" class="president-img">
-                        </div>
-                        <div class="president-info">
-                            <h4>Anthony</h4>
-                            <p class="president-role">Club President</p>
-                            <p class="president-description">Anthony is a Co-President and a piano major at A. W. Dreyfoos School of the Arts. Whenever he isn't practicing piano, he enjoys programming and riding his bike.</p>
-                        </div>
-                    </div>
-                    <div class="president-card">
-                        <div class="president-image">
-                            <img src="headshots/karina.jpg" alt="Karina" class="president-img">
-                        </div>
-                        <div class="president-info">
-                            <h4>Karina</h4>
-                            <p class="president-role">Club President</p>
-                            <p class="president-description">Karina is a Co-President and a Communications major at Dreyfoos. Whenever she isn't fundraising and organizing events for TREDD, you can find her at reading a good book or at the beach.</p>
-                        </div>
-                    </div>
-                    <div class="president-card">
-                        <div class="president-image">
-                            <img src="headshots/willstet.png" alt="Will" class="president-img">
-                        </div>
-                        <div class="president-info">
-                            <h4>Will</h4>
-                            <p class="president-role">Club President</p>
-                            <p class="president-description">William is the Co-President and founder of TREDD. In his free time, William likes to 3D print and read. He also enjoys spending time with his Golden Doodle.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- STATS -->
+  <div class="stat-bar">
+    <div class="stat-item reveal">
+      <div class="stat-n">30+</div>
+      <div class="stat-l">Computers donated</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.08s">
+      <div class="stat-n">8+</div>
+      <div class="stat-l">Team members</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.16s">
+      <div class="stat-n">100%</div>
+      <div class="stat-l">Student-led</div>
+    </div>
+  </div>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2>Contact Us</h2>
-                <p>Get in touch and join our mission</p>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Email</h4>
-                            <p>contact@treddatdsoa.org</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Address</h4>
-                            <p>501 S Sapodilla Ave, West Palm Beach</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-instagram"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Instagram</h4>
-                            <p>@tredd_at_dsoa</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-form">
-                    <h3>Send us a message</h3>
-                    <form action="https://formsubmit.co/contact@treddatdsoa.org" method="POST" id="contactForm">
-                        <div class="form-group">
-                            <input type="text" id="name" name="name" placeholder="Your Name" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" id="email" name="email" placeholder="Your Email" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- MISSION -->
+  <section id="mission">
+    <div class="reveal">
+      <div class="sec-label">What we do</div>
+      <h2>Recycle. Restore.<br>Redistribute.</h2>
+      <p class="sec-sub">Every unused laptop has the potential to change a student's future. We make that happen.</p>
+    </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>TREDD</h3>
-                    <p>Technology Recycling and Eliminating the Digital Divide</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#mission">Our Mission</a></li>
-                        <li><a href="#team">Team</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-social">
-                    <h4>Follow Us</h4>
-                    <div class="social-links">
-                        <a href="https://www.instagram.com/tredd_at_dsoa/?hl=en" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 TREDD. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <div class="mission-photos reveal">
+      <img src="Images/IMG_0034.jpeg" alt="TREDD team presentation" loading="lazy" />
+      <img src="Images/karinaa%20presenting.jpeg" alt="Karina presenting" loading="lazy" />
+      <img src="Images/Karinas%20presentaionnn.jpeg" alt="TREDD at work" loading="lazy" />
+    </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <div class="pillars-grid reveal">
+      <div class="pillar">
+        <div class="pillar-icon">♻️</div>
+        <div class="pillar-title">Collect</div>
+        <div class="pillar-body">We accept unused and unwanted computers from donors across our community.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🛠</div>
+        <div class="pillar-title">Refurbish</div>
+        <div class="pillar-body">Each device is cleaned, repaired, and loaded with educational software by our team.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌱</div>
+        <div class="pillar-title">Distribute</div>
+        <div class="pillar-body">Computers go directly to children in under-resourced communities — no red tape.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team">
+    <div class="reveal">
+      <div class="sec-label">Who we are</div>
+      <h2>Built by students,<br>for students.</h2>
+      <p class="sec-sub">A passionate team from A.W. Dreyfoos School of the Arts driving real change.</p>
+    </div>
+
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <img src="Images/aiden.jpeg" alt="Aiden, President" loading="lazy" />
+        <div class="team-card-body">
+          <div class="tc-name">Aiden</div>
+          <div class="tc-role">President</div>
+          <div class="tc-bio">Current communications student at Dreyfoos who enjoys working on computers and being active.</div>
+        </div>
+      </div>
+      <div class="team-card reveal" style="transition-delay:.1s">
+        <div style="width:100%;aspect-ratio:1;background:#1a1a1a;display:grid;place-items:center;border-bottom:.5px solid var(--border-2);">
+          <div style="text-align:center;">
+            <div style="width:72px;height:72px;border-radius:50%;background:rgba(29,158,117,.15);border:1.5px dashed rgba(29,158,117,.35);display:grid;place-items:center;margin:0 auto 12px;font-size:28px;">👤</div>
+            <div style="font-size:12px;color:var(--text-3);letter-spacing:.04em;">Photo coming soon</div>
+          </div>
+        </div>
+        <div class="team-card-body">
+          <div class="tc-name">Ari</div>
+          <div class="tc-role">Vice President</div>
+          <div class="tc-bio">Current communications student at Dreyfoos who is passionate about the environment and making the world a better place.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="join-strip reveal">
+      <div>
+        <h3>Want to join our team?</h3>
+        <p>We're always looking for passionate students who want to make a real difference in their community.</p>
+      </div>
+      <a href="#contact" class="btn-fill">Get in touch</a>
+    </div>
+  </section>
+
+  <!-- DONATE CTA -->
+  <section id="donate">
+    <div class="reveal">
+      <div class="sec-label">Make an impact</div>
+      <h2>Have a computer<br>gathering dust?</h2>
+      <p class="sec-sub">Drop it off and we'll make sure it finds a home where it truly matters.</p>
+      <div class="hero-btns" style="margin-top:0">
+        <a href="#contact" class="btn-fill">Donate a device</a>
+        <a href="mailto:contact@treddatdsoa.org" class="btn-ghost">Email us directly</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="reveal">
+      <div class="sec-label">Get in touch</div>
+      <h2>Let's work together.</h2>
+      <p class="sec-sub">Whether you want to donate, join the team, or just say hello.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="info-item">
+          <div class="info-icon-wrap">✉️</div>
+          <div>
+            <div class="info-lbl">Email</div>
+            <div class="info-val"><a href="mailto:contact@treddatdsoa.org">contact@treddatdsoa.org</a></div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon-wrap">📍</div>
+          <div>
+            <div class="info-lbl">Address</div>
+            <div class="info-val">501 S Sapodilla Ave<br>West Palm Beach, FL</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon-wrap">📸</div>
+          <div>
+            <div class="info-lbl">Instagram</div>
+            <div class="info-val"><a href="https://www.instagram.com/tredd_at_dsoa/" target="_blank" rel="noopener">@tredd_at_dsoa</a></div>
+          </div>
+        </div>
+      </div>
+
+      <iframe name="formsubmit-iframe" id="formsubmitIframe" title="Form submission" hidden></iframe>
+      <p id="formStatus" class="form-status" hidden role="status"></p>
+      <form
+        class="contact-form reveal"
+        id="contactForm"
+        action="https://formsubmit.co/contact@treddatdsoa.org"
+        method="POST"
+        target="formsubmit-iframe"
+      >
+        <input type="hidden" name="_subject" value="New TREDD website message" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_next" id="formNext" value="https://treddatdsoa.org/#contact" />
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fname">Name</label>
+            <input id="fname" name="name" type="text" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label for="femail">Email</label>
+            <input id="femail" name="email" type="email" placeholder="your@email.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="fsubject">Subject</label>
+          <input id="fsubject" name="subject" type="text" placeholder="How can we help?" />
+        </div>
+        <div class="form-group">
+          <label for="fmessage">Message</label>
+          <textarea id="fmessage" name="message" placeholder="Tell us about yourself or your donation..." required></textarea>
+        </div>
+        <button type="submit" class="form-submit" id="submitBtn">Send message</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      TREDD
+      <span>Technology Recycling &amp; Eliminating the Digital Divide</span>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#donate">Donate</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <span class="copy">© 2025 TREDD. All rights reserved.</span>
+  </footer>
+
+  <script>
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    const form = document.getElementById('contactForm');
+    const iframe = document.getElementById('formsubmitIframe');
+    const formNext = document.getElementById('formNext');
+    const formStatus = document.getElementById('formStatus');
+    const btn = document.getElementById('submitBtn');
+    const FORM_ENDPOINT = 'https://formsubmit.co/ajax/contact@treddatdsoa.org';
+
+    if (location.protocol === 'http:' || location.protocol === 'https:') {
+      formNext.value = location.href.split('#')[0] + '#contact';
+    }
+
+    let iframeReady = false;
+    let pendingSubmit = false;
+
+    iframe.addEventListener('load', () => {
+      if (!iframeReady) {
+        iframeReady = true;
+        return;
+      }
+      if (!pendingSubmit) return;
+      pendingSubmit = false;
+      btn.textContent = 'Sent ✓';
+      btn.style.background = '#0F6E56';
+      form.reset();
+      formStatus.hidden = false;
+      formStatus.className = 'form-status success';
+      formStatus.textContent = 'Message sent! We\'ll get back to you soon.';
+      setTimeout(() => {
+        btn.textContent = 'Send message';
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 3000);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      const honey = form.querySelector('[name="_honey"]');
+      if (honey && honey.value) {
+        e.preventDefault();
+        return;
+      }
+
+      if (location.protocol === 'http:' || location.protocol === 'https:') {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        formStatus.hidden = true;
+
+        const payload = {
+          name: form.name.value,
+          email: form.email.value,
+          subject: form.subject.value || 'Website inquiry',
+          message: form.message.value,
+          _subject: 'New TREDD website message',
+          _template: 'table',
+          _captcha: 'false',
+          _replyto: form.email.value,
+        };
+
+        try {
+          const res = await fetch(FORM_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          if (!res.ok || data.success === 'false' || data.success === false) {
+            throw new Error(data.message || 'submit failed');
+          }
+          btn.textContent = 'Sent ✓';
+          btn.style.background = '#0F6E56';
+          form.reset();
+          formStatus.hidden = false;
+          formStatus.className = 'form-status success';
+          formStatus.textContent = 'Message sent! We\'ll get back to you soon.';
+        } catch {
+          formStatus.hidden = false;
+          formStatus.className = 'form-status error';
+          formStatus.textContent = 'Could not send. Please email contact@treddatdsoa.org directly.';
+          btn.textContent = 'Send message';
+        }
+        setTimeout(() => {
+          btn.style.background = '';
+          btn.disabled = false;
+          if (btn.textContent === 'Sent ✓') btn.textContent = 'Send message';
+        }, 3000);
+        return;
+      }
+
+      pendingSubmit = true;
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      formStatus.hidden = true;
+    });
+  </script>
+
+
+</body></html>
