@@ -260,16 +260,9 @@
       align-self: flex-start; transition: background .2s, transform .15s;
     }
     .form-submit:hover { background: var(--green-mid); transform: translateY(-1px); }
-    .form-status {
-      font-size: 14px; padding: 12px 16px; border-radius: 10px; margin-bottom: 14px;
-    }
-    .form-status.success {
-      color: var(--green); background: rgba(29,158,117,.12);
-      border: .5px solid rgba(29,158,117,.35);
-    }
-    .form-status.error {
-      color: #ff6b6b; background: rgba(255,107,107,.1);
-      border: .5px solid rgba(255,107,107,.3);
+    .form-submit:disabled { opacity: .7; cursor: wait; transform: none; }
+    .form-note {
+      font-size: 12px; color: var(--text-3); line-height: 1.5; margin-top: 4px;
     }
 
     /* FOOTER */
@@ -475,20 +468,17 @@
         </div>
       </div>
 
-      <iframe name="formsubmit-iframe" id="formsubmitIframe" title="Form submission" hidden></iframe>
-      <p id="formStatus" class="form-status" hidden role="status"></p>
       <form
         class="contact-form reveal"
         id="contactForm"
         action="https://formsubmit.co/contact@treddatdsoa.org"
         method="POST"
-        target="formsubmit-iframe"
       >
         <input type="hidden" name="_subject" value="New TREDD website message" />
         <input type="hidden" name="_template" value="table" />
         <input type="hidden" name="_captcha" value="false" />
-        <input type="hidden" name="_next" id="formNext" value="https://treddatdsoa.org/#contact" />
-        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+        <input type="hidden" name="_next" value="https://treddatdsoa.org/thanks.html" />
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <div class="form-row">
           <div class="form-group">
             <label for="fname">Name</label>
@@ -508,6 +498,7 @@
           <textarea id="fmessage" name="message" placeholder="Tell us about yourself or your donation..." required></textarea>
         </div>
         <button type="submit" class="form-submit" id="submitBtn">Send message</button>
+        <p class="form-note">First-time setup: check contact@treddatdsoa.org for a FormSubmit activation link if messages don't arrive.</p>
       </form>
     </div>
   </section>
@@ -533,98 +524,15 @@
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-    const form = document.getElementById('contactForm');
-    const iframe = document.getElementById('formsubmitIframe');
-    const formNext = document.getElementById('formNext');
-    const formStatus = document.getElementById('formStatus');
-    const btn = document.getElementById('submitBtn');
-    const FORM_ENDPOINT = 'https://formsubmit.co/ajax/contact@treddatdsoa.org';
-
-    if (location.protocol === 'http:' || location.protocol === 'https:') {
-      formNext.value = location.href.split('#')[0] + '#contact';
-    }
-
-    let iframeReady = false;
-    let pendingSubmit = false;
-
-    iframe.addEventListener('load', () => {
-      if (!iframeReady) {
-        iframeReady = true;
-        return;
-      }
-      if (!pendingSubmit) return;
-      pendingSubmit = false;
-      btn.textContent = 'Sent ✓';
-      btn.style.background = '#0F6E56';
-      form.reset();
-      formStatus.hidden = false;
-      formStatus.className = 'form-status success';
-      formStatus.textContent = 'Message sent! We\'ll get back to you soon.';
-      setTimeout(() => {
-        btn.textContent = 'Send message';
-        btn.style.background = '';
-        btn.disabled = false;
-      }, 3000);
-    });
-
-    form.addEventListener('submit', async (e) => {
-      const honey = form.querySelector('[name="_honey"]');
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      const honey = e.target.querySelector('[name="_honey"]');
       if (honey && honey.value) {
         e.preventDefault();
         return;
       }
-
-      if (location.protocol === 'http:' || location.protocol === 'https:') {
-        e.preventDefault();
-        btn.disabled = true;
-        btn.textContent = 'Sending…';
-        formStatus.hidden = true;
-
-        const payload = {
-          name: form.name.value,
-          email: form.email.value,
-          subject: form.subject.value || 'Website inquiry',
-          message: form.message.value,
-          _subject: 'New TREDD website message',
-          _template: 'table',
-          _captcha: 'false',
-          _replyto: form.email.value,
-        };
-
-        try {
-          const res = await fetch(FORM_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          const data = await res.json();
-          if (!res.ok || data.success === 'false' || data.success === false) {
-            throw new Error(data.message || 'submit failed');
-          }
-          btn.textContent = 'Sent ✓';
-          btn.style.background = '#0F6E56';
-          form.reset();
-          formStatus.hidden = false;
-          formStatus.className = 'form-status success';
-          formStatus.textContent = 'Message sent! We\'ll get back to you soon.';
-        } catch {
-          formStatus.hidden = false;
-          formStatus.className = 'form-status error';
-          formStatus.textContent = 'Could not send. Please email contact@treddatdsoa.org directly.';
-          btn.textContent = 'Send message';
-        }
-        setTimeout(() => {
-          btn.style.background = '';
-          btn.disabled = false;
-          if (btn.textContent === 'Sent ✓') btn.textContent = 'Send message';
-        }, 3000);
-        return;
-      }
-
-      pendingSubmit = true;
+      const btn = document.getElementById('submitBtn');
       btn.disabled = true;
       btn.textContent = 'Sending…';
-      formStatus.hidden = true;
     });
   </script>
 
