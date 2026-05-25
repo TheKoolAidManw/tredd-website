@@ -1,110 +1,59 @@
-# TREDD Contact Form Setup Guide
+# TREDD Contact Form (Nodemailer)
 
-## 🎯 Overview
-Your TREDD website now has a fully functional contact form that sends automated emails to `contact@treddatdsoa.org` using FormSubmit. The form includes:
+The contact form sends email through a Node.js server using [Nodemailer](https://nodemailer.com/). FormSubmit is no longer used.
 
-- ✅ Real-time validation
-- ✅ Professional notifications
-- ✅ Loading states
-- ✅ Email automation via FormSubmit
-- ✅ Mobile-responsive design
-- ✅ No account setup required
+## Setup
 
-## 🚀 Quick Setup (2 minutes)
+1. Copy the example env file:
 
-### Step 1: Activate FormSubmit
-1. **First Submission:** Submit the form once from your website
-2. **Check Email:** You'll receive an activation email at `contact@treddatdsoa.org`
-3. **Activate:** Click the activation link in the email
-4. **Done!** Your form is now active and will send emails automatically
+   ```bash
+   cp .env.example .env
+   ```
 
-### Step 2: Test the Form
-1. Open your website
-2. Go to the Contact section
-3. Fill out and submit the form
-4. Check if you receive the email at `contact@treddatdsoa.org`
+2. Add your SMTP credentials to `.env`.
 
-## ✨ Features
+   **Gmail / Google Workspace example:**
 
-### Form Validation
-- **Real-time feedback** as users type
-- **Visual indicators** (green for valid, red for invalid)
-- **Comprehensive validation:**
-  - Name: minimum 2 characters
-  - Email: valid email format
-  - Message: minimum 10 characters
+   - Enable 2FA on the Google account
+   - Create an [App Password](https://myaccount.google.com/apppasswords)
+   - Set `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`, `SMTP_USER`, and `SMTP_PASS`
 
-### User Experience
-- **Loading animation** during submission
-- **Professional notifications** (success/error)
-- **Success page redirect** after submission
-- **Mobile-responsive** design
+3. Install dependencies and start the server:
 
-### Email Features
-- **Automated delivery** to `contact@treddatdsoa.org`
-- **Professional table formatting** with all form data
-- **Reliable delivery** via FormSubmit infrastructure
-- **No spam** - emails come from FormSubmit's trusted servers
+   ```bash
+   npm install
+   npm start
+   ```
 
-## 🔧 Troubleshooting
+4. Open `http://localhost:3000` and test the contact form.
 
-### Common Issues:
+## Environment variables
 
-**"Form not sending emails"**
-- Make sure you've activated FormSubmit by clicking the activation link
-- Check your spam folder for the activation email
-- Verify the email address is correct
+| Variable     | Description                          |
+|-------------|--------------------------------------|
+| `SMTP_HOST` | Mail server hostname                 |
+| `SMTP_PORT` | Usually `587` (TLS) or `465` (SSL)  |
+| `SMTP_USER` | SMTP login username                  |
+| `SMTP_PASS` | SMTP password or app password        |
+| `SMTP_SECURE` | Set `true` for port 465           |
+| `MAIL_FROM` | Sender address (often same as SMTP user) |
+| `MAIL_TO`   | Inbox for form messages (default: `contact@treddatdsoa.org`) |
+| `PORT`      | Server port (default: `3000`)       |
 
-**"Activation email not received"**
-- Check spam/junk folder
-- Try submitting the form again
-- Verify `contact@treddatdsoa.org` is a valid email address
+## Deployment
 
-**"Form validation errors"**
-- Check browser console for JavaScript errors
-- Ensure all required fields are filled
-- Verify email format is correct
+GitHub Pages only hosts static files and **cannot** run Nodemailer. Deploy the full project to a Node host, for example:
 
-### Debug Mode:
-Open browser console (F12) to see validation messages and form submission status.
+- [Render](https://render.com)
+- [Railway](https://railway.app)
+- [Fly.io](https://fly.io)
 
-## 📧 Email Format
+Set the same environment variables in the host dashboard, then point `treddatdsoa.org` to that service (or use the host’s URL).
 
-FormSubmit automatically formats emails as a professional table containing:
-- **Name** - User's name
-- **Email** - User's email address
-- **Message** - User's message content
-- **Subject** - "New Contact Form Submission from TREDD Website"
+The server serves the website and handles `POST /api/contact`.
 
-## 🔒 Security & Privacy
+## Troubleshooting
 
-- ✅ No sensitive data stored on your server
-- ✅ FormSubmit handles all email processing securely
-- ✅ No API keys or credentials needed
-- ✅ Form data is only used for email delivery
-- ✅ Built-in spam protection
-
-## 💰 Pricing
-
-- **Completely Free** - No monthly limits
-- **No setup fees** or hidden costs
-- **Unlimited submissions**
-
-## 🆘 Support
-
-If you need help:
-1. Check the [FormSubmit documentation](https://formsubmit.co/)
-2. Review the troubleshooting section above
-3. Check browser console for error messages
-4. Verify your email address is working
-
-## 🎉 Success!
-
-Once activated, your contact form will:
-- Collect visitor messages professionally
-- Send automated emails to your team
-- Provide excellent user experience
-- Work reliably across all devices
-- Require zero maintenance
-
-Your TREDD website is now ready to receive and respond to visitor inquiries automatically!
+- **503 "Email service is not configured"** — `.env` is missing or SMTP variables are incomplete.
+- **500 on submit** — Wrong SMTP password, blocked port, or provider security settings.
+- **Form works locally but not on treddatdsoa.org** — The live domain is still on GitHub Pages only; deploy the Node server and update DNS.

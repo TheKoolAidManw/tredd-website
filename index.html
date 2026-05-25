@@ -261,8 +261,16 @@
     }
     .form-submit:hover { background: var(--green-mid); transform: translateY(-1px); }
     .form-submit:disabled { opacity: .7; cursor: wait; transform: none; }
-    .form-note {
-      font-size: 12px; color: var(--text-3); line-height: 1.5; margin-top: 4px;
+    .form-status {
+      font-size: 14px; padding: 12px 16px; border-radius: 10px; margin-bottom: 14px;
+    }
+    .form-status.success {
+      color: var(--green); background: rgba(29,158,117,.12);
+      border: .5px solid rgba(29,158,117,.35);
+    }
+    .form-status.error {
+      color: #ff6b6b; background: rgba(255,107,107,.1);
+      border: .5px solid rgba(255,107,107,.3);
     }
 
     /* FOOTER */
@@ -468,17 +476,9 @@
         </div>
       </div>
 
-      <form
-        class="contact-form reveal"
-        id="contactForm"
-        action="https://formsubmit.co/contact@treddatdsoa.org"
-        method="POST"
-      >
-        <input type="hidden" name="_subject" value="New TREDD website message" />
-        <input type="hidden" name="_template" value="table" />
-        <input type="hidden" name="_captcha" value="false" />
-        <input type="hidden" name="_next" value="https://treddatdsoa.org/thanks.html" />
-        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <p id="formStatus" class="form-status" hidden role="status"></p>
+      <form class="contact-form reveal" id="contactForm" novalidate>
+        <input type="text" name="website" id="website" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <div class="form-row">
           <div class="form-group">
             <label for="fname">Name</label>
@@ -495,10 +495,9 @@
         </div>
         <div class="form-group">
           <label for="fmessage">Message</label>
-          <textarea id="fmessage" name="message" placeholder="Tell us about yourself or your donation..." required></textarea>
+          <textarea id="fmessage" name="message" placeholder="Tell us about yourself or your donation..." required minlength="10"></textarea>
         </div>
         <button type="submit" class="form-submit" id="submitBtn">Send message</button>
-        <p class="form-note">First-time setup: check contact@treddatdsoa.org for a FormSubmit activation link if messages don't arrive.</p>
       </form>
     </div>
   </section>
@@ -524,15 +523,56 @@
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-    document.getElementById('contactForm').addEventListener('submit', (e) => {
-      const honey = e.target.querySelector('[name="_honey"]');
-      if (honey && honey.value) {
-        e.preventDefault();
-        return;
+    const contactForm = document.getElementById('contactForm');
+    const formStatus = document.getElementById('formStatus');
+    const submitBtn = document.getElementById('submitBtn');
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (document.getElementById('website').value) return;
+
+      const payload = {
+        name: contactForm.name.value.trim(),
+        email: contactForm.email.value.trim(),
+        subject: contactForm.subject.value.trim(),
+        message: contactForm.message.value.trim(),
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      formStatus.hidden = true;
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to send message.');
+        }
+
+        contactForm.reset();
+        formStatus.hidden = false;
+        formStatus.className = 'form-status success';
+        formStatus.textContent = 'Message sent! We\'ll get back to you soon.';
+        submitBtn.textContent = 'Sent ✓';
+        submitBtn.style.background = '#0F6E56';
+      } catch (err) {
+        formStatus.hidden = false;
+        formStatus.className = 'form-status error';
+        formStatus.textContent = err.message || 'Could not send. Please email contact@treddatdsoa.org directly.';
+        submitBtn.textContent = 'Send message';
       }
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.textContent = 'Sending…';
+
+      setTimeout(() => {
+        submitBtn.style.background = '';
+        submitBtn.disabled = false;
+        if (submitBtn.textContent === 'Sent ✓') submitBtn.textContent = 'Send message';
+      }, 3000);
     });
   </script>
 

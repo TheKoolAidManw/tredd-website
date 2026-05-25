@@ -23,33 +23,33 @@ TREDD is dedicated to eliminating the digital divide by:
 
 ```
 tredd-website/
-├── index.html          # Main HTML file
-├── styles.css          # CSS styling and animations
-├── script.js           # JavaScript functionality
-├── images/             # Website images
-│   ├── IMG_0034.jpeg
-│   ├── karinaa presenting.jpeg
-│   └── Karinas presentaionnn.jpeg
-├── README.md           # This file
-└── deploy-to-github.bat # Deployment script
+├── index.html          # Main page (styles/scripts inline)
+├── server.js           # Express server + Nodemailer contact API
+├── package.json        # Node dependencies
+├── Images/             # Photos
+├── .env.example        # SMTP config template
+└── CONTACT_FORM_SETUP.md
 ```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- A modern web browser
-- Git (for deployment)
+- Node.js 18+
+- SMTP credentials (see `CONTACT_FORM_SETUP.md`)
 
-### Local Development
-1. Clone or download this repository
-2. Open `index.html` in your web browser
-3. The website will load with all features working locally
+```bash
+cp .env.example .env   # then edit with your SMTP settings
+npm install
+npm start              # http://localhost:3000
+```
 
-### Deployment to GitHub Pages
-1. Create a new repository on GitHub named `tredd-website`
-2. Run the deployment script: `deploy-to-github.bat`
-3. Replace `YOUR_USERNAME` in the script with your GitHub username
-4. Enable GitHub Pages in your repository settings
+### Local development
+1. Clone this repository
+2. Follow `CONTACT_FORM_SETUP.md` to configure `.env`
+3. Run `npm start` and open `http://localhost:3000`
+
+### Deployment
+The contact form requires the Node server. Deploy to Render, Railway, or similar with your SMTP env vars. GitHub Pages alone cannot send email.
 
 ## 🎨 Design Features
 
